@@ -52,6 +52,7 @@ public class Pilot {
         for (String move:moves) {
             String[] parts = move.split(" ");
             String direction = parts[0];
+
             int units = Integer.parseInt(parts[1].trim());
 
             switch (direction) {
