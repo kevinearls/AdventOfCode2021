@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class LanternFish {
-    int newFishValue=8;
+    public static final int newFishValue=8;
     int resetFishValue=6;
     int days = 256;
 
@@ -18,39 +18,42 @@ public class LanternFish {
         List<Integer> fish = lf.createIntegerList(in.get(0));
 
         System.out.println("Initial State = " + fish);
+        long[] state = new long[newFishValue + 1];
+        for (Integer f:fish) {
+            state[f]++;
+        }
+        System.out.print("At start ");
+        lf.printStatus(state);
 
+        // Note 0 value to be added to 6 and to be used to reset 8 laster
         for (int day=1; day <= lf.days; day++) {
-            int additions=0;
-            for (Integer f:fish) {
-                if (f==0) {
-                    additions++;
-                }
+            long[] newState=new long[state.length];  // Maybe we can just update state here
+            long additions=state[0];
+            for (int i=1; i< state.length; i++) {
+                newState[i-1] = state[i];
             }
+            newState[lf.resetFishValue] += additions;
+            newState[newFishValue] = additions;
 
-            // Todo decrement part...
-            fish=lf.decrement(fish);
-            for (int i=0; i< additions; i++) {
-                fish.add(lf.newFishValue);
-            }
-            //System.out.println("At the end of day " + day +": " + fish);
-            System.out.println("End of day: " + day);
+            state=newState;
         }
 
-        System.out.println("Finished with " + fish.size() + " fish");  // 360268 for part 1
+        // System.out.println("Final state");
+        long sum = 0;
+        for (int i=0; i < state.length; i++) {
+            System.out.println(i + ": " + state[i]);
+            sum += state[i];
+        }
+
+        System.out.println("Finished with " + sum + " fish");  // 360268 for part 1
+        // 1632146183902 is correct for part 2
     }
 
-    // Hacky.  There must be a better way to do this
-    public List<Integer> decrement(List<Integer> data) {
-        List<Integer> result = new ArrayList<>();
-        for (Integer i:data) {
-            if (i == 0) {
-                result.add(resetFishValue);
-            } else {
-                result.add(i - 1);
-            }
+    public void printStatus(long[] data) {
+        for (int i = 0; i < data.length; i++) {
+            System.out.print(i + ":" + data[i] + ", ");
         }
-
-        return result;
+        System.out.println("");
     }
 
     public List<String> loadData() throws Exception {
