@@ -52,7 +52,7 @@ public class LanternFish {
 
         return result;
     }
-    
+
     public List<String> loadData() throws Exception {
         String fileName = "/Users/kearls/sources/kevinearls/AdventOfCode2021/Day6/resources/input.txt";
         List<String> contents = MyUtils.loadFromFile(fileName);
